@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WritingFrames</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f5f7;
+  --surface: #eaeaed;
+  --border: #d8d8dc;
+  --primary: #e8151a;
+  --secondary: #6b8fd4;
+  --lavender: #bda9e4;
+  --text: #111111;
+  --white: #ffffff;
+  --muted: #888888;
+  --light: #aaaaaa;
+  --success: #22a55e;
+  --newbtn: #fe6565;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Serif 4', Georgia, serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.container { max-width: 760px; margin: 0 auto; padding: 32px 20px; }
+.mono { font-family: 'DM Mono', monospace; }
+.heading { font-family: 'Playfair Display', serif; }
+.btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; font-weight: 500;
+  padding: 8px 18px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface); color: var(--text);
+  cursor: pointer; transition: all 0.2s;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.btn:hover { border-color: var(--secondary); color: var(--secondary); }
+.btn-dark { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn-dark:hover { opacity: 0.85; color: var(--bg); }
+.btn-blue { background: var(--secondary); color: var(--white); border-color: var(--secondary); }
+.btn-blue:hover { opacity: 0.85; color: var(--white); }
+.btn-ghost { background: none; border-color: transparent; color: var(--muted); }
+.btn-ghost:hover { background: var(--surface); border-color: var(--border); color: var(--text); }
+.btn-sm { font-size: 11px; padding: 5px 12px; }
+
+/* Cards */
+.doc-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  animation: slideUp 0.4s ease both;
+}
+.doc-card:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.doc-card .title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+.doc-card .preview { font-size: 13px; color: var(--muted); line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.doc-card .meta { font-size: 10px; color: var(--light); display: flex; gap: 12px; align-items: center; }
+.badge { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+.badge-fw { color: var(--secondary); background: rgba(107,143,212,0.1); }
+.badge-ff { color: var(--lavender); background: rgba(189,169,228,0.1); }
+.badge-stage { color: var(--secondary); background: rgba(107,143,212,0.08); }
+.del-btn {
+  position: absolute; top: 8px; right: 10px;
+  background: none; border: none; color: var(--light);
+  cursor: pointer; font-size: 18px; line-height: 1; padding: 2px;
+  transition: color 0.15s;
+}
+.del-btn:hover { color: var(--primary); }
+
+/* Editor */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap; gap: 10px;
+}
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.back-btn {
+  font-family: 'DM Mono', monospace; font-size: 12px;
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; padding: 4px 0; transition: color 0.2s;
+}
+.back-btn:hover { color: var(--text); }
+.ed-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; }
+.ed-ta {
+  width: 100%; min-height: 400px;
+  background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 16px; line-height: 1.8; padding: 24px;
+  resize: vertical; outline: none; transition: border-color 0.3s;
+}
+.ed-ta:focus { border-color: var(--secondary); }
+.ed-ta::placeholder { color: var(--light); font-style: italic; }
+.ed-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 0 4px; font-size: 12px; color: var(--light); }
+
+/* Stages */
+.stage-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; }
+.stage-bar button {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 4px;
+  border: 1px solid var(--border); background: none;
+  color: var(--muted); cursor: pointer; transition: all 0.2s;
+}
+.stage-bar button.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+/* Framework */
+.prog { display: flex; gap: 4px; margin-bottom: 24px; }
+.prog div { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+.prog div.on { background: var(--secondary); }
+.o-card { margin-bottom: 10px; padding: 12px 16px; background: var(--white); border-radius: 8px; border: 1px solid var(--border); }
+.o-label { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--lavender); font-weight: 600; margin-bottom: 4px; }
+.ph-label { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; color: var(--secondary); margin-bottom: 4px; }
+
+/* WOLI overlay */
+.woe-bg {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--text); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+.woe-box { width: 100%; max-width: 680px; padding: 24px; }
+.woe-ta {
+  width: 100%; min-height: 320px;
+  background: rgba(245,245,247,0.06);
+  border: 1px solid rgba(245,245,247,0.1); border-radius: 10px;
+  color: var(--bg); font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 16px; line-height: 1.8; padding: 24px;
+  resize: none; outline: none; transition: border-color 0.3s;
+}
+.woe-ta:focus { border-color: rgba(107,143,212,0.5); }
+.woe-ta::placeholder { color: rgba(245,245,247,0.2); font-style: italic; }
+
+/* LinePuncher */
+.lp-header {
+  background: var(--text); padding: 14px 20px;
+  border-bottom: 3px solid var(--primary);
+  display: flex; align-items: center; justify-content: space-between;
+  border-radius: 10px 10px 0 0; margin: -32px -20px 20px;
+}
+.lp-block {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 10px; position: relative;
+  transition: box-shadow 0.15s;
+}
+.lp-block:hover { box-shadow: 0 2px 12px rgba(17,17,17,0.06); }
+.lp-tools { display: flex; gap: 2px; position: absolute; top: 6px; right: 8px; opacity: 0.35; transition: opacity 0.15s; }
+.lp-block:hover .lp-tools { opacity: 1; }
+.tb { background: none; border: none; cursor: pointer; font-size: 14px; color: var(--text); padding: 2px 5px; border-radius: 4px; line-height: 1; }
+.tb.dg { color: var(--primary); }
+.pl { background: rgba(232,21,26,0.1); border-bottom: 2px solid var(--primary); padding: 0 2px; border-radius: 2px; color: var(--primary); font-weight: 600; }
+
+/* Block editor */
+.brow {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 10px 16px; border-bottom: 1px solid var(--surface);
+  cursor: grab; transition: background 0.15s;
+}
+.brow:hover { background: var(--surface); }
+.brow:last-child { border-bottom: none; }
+
+/* Modal */
+.modal-bg {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(17,17,17,0.5); z-index: 900;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease; backdrop-filter: blur(2px);
+}
+.modal-box {
+  background: var(--white); border-radius: 12px; padding: 32px;
+  width: 100%; max-width: 420px; animation: slideUp 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+.modal-box h2 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+.mf { margin-bottom: 16px; }
+.mf label { display: block; font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 6px; }
+.mf input, .mf select {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px;
+  font-family: 'Source Serif 4', Georgia, serif; font-size: 15px;
+  color: var(--text); background: var(--bg); outline: none;
+}
+.mf input:focus, .mf select:focus { border-color: var(--secondary); }
+.tg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.tc {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+}
+.tc:hover { border-color: var(--secondary); }
+.tc.sel { border-color: var(--secondary); background: rgba(107,143,212,0.06); }
+
+/* Line editor */
+.lb {
+  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 10px; position: relative;
+  border-left: 3px solid var(--secondary); padding-left: 14px;
+}
+
+@media (max-width: 600px) {
+  .container { padding: 24px 16px 40px; }
+  .topbar { flex-direction: column; align-items: flex-start; }
+  .topbar-right { width: 100%; justify-content: flex-end; }
+  .tg { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="app"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Storage ──
+  var DK = 'wf_v2';
+  function lsDocs() { try { return JSON.parse(localStorage.getItem(DK)) || []; } catch(e) { return []; } }
+  function svDocs(d) { localStorage.setItem(DK, JSON.stringify(d)); }
+  function lsDoc(id) { try { return JSON.parse(localStorage.getItem('wf_' + id)) || null; } catch(e) { return null; } }
+  function svDoc(id, d) { localStorage.setItem('wf_' + id, JSON.stringify(d)); }
+  function rmDoc(id) { localStorage.removeItem('wf_' + id); }
+
+  // ── Utils ──
+  function uid() { return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function cw(t) { return (t||'').trim().split(/\s+/).filter(Boolean).length; }
+  function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  function fmt(ts) { return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric'}); }
+  function ftime(s) { return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+  function splitS(t) {
+    if (!t || !t.trim()) return [];
+    var r = [], re = /[^.!?]*[.!?]+[\s]*/g, m;
+    while ((m = re.exec(t)) !== null) { var s = m[0].trim(); if (s) r.push(s); }
+    var l = t.replace(re, '').trim();
+    if (l) r.push(l);
+    return r;
+  }
+  function gMid(s) { return Math.floor(s.split(/\s+/).length / 2); }
+  function hlHtml(t) {
+    var ss = splitS(t);
+    if (!ss.length) return '<span style="opacity:.4;font-style:italic">Empty</span>';
+    return ss.map(function(s) {
+      var w = s.split(/\s+/), m = gMid(s);
+      return '<span>' + esc(w.slice(0,m).join(' ')) + ' </span><span class="pl">' + esc(w.slice(m).join(' ')) + '</span>';
+    }).join(' ');
+  }
+
+  // ── Constants ──
+  var SECS = [
+    {id:'A2', label:'A2 — Main Set-Up', target:250},
+    {id:'A3', label:'A3 — What happened after', target:250},
+    {id:'A1', label:'A1 — What happened before', target:250},
+    {id:'HK', label:'HK — Hook', target:125},
+    {id:'CB', label:'CB — Call back', target:125}
+  ];
+  var AORD = ['HK','A1','A2','A3','CB'];
+  var FT = [
+    {id:'story', label:'Story', subs:['Set-Up (Desire)','Details (Tension)','Transition (Outcome)']},
+    {id:'opinion', label:'Opinion', subs:['Popular Idea','Description of the Idea','Rebuttal to Idea','Transition']},
+    {id:'persuasive', label:'Persuasive', subs:['Claim','Evidence','Warrant']},
+    {id:'comedy', label:'Comedy', subs:['Set-Up','Punchline','Tagline']}
+  ];
+  var STG = ['outline','draft','content-editor','line-editor','publish'];
+  var SL = {outline:'Outline', draft:'Draft', 'content-editor':'Content Editor', 'line-editor':'Line Editor', publish:'Publish'};
+  var IDLE = 3; // seconds
+
+  function gSubs(ft) {
+    for (var i = 0; i < FT.length; i++) if (FT[i].id === ft) return FT[i].subs;
+    return FT[0].subs;
+  }
+
+  // ── State ──
+  var st = {
+    v: 'home', docs: lsDocs(), aid: null, ad: null,
+    // framework
+    fv: null, fsi: 0, fsbi: 0,
+    // draft (Write-or-Else)
+    dt: '', dw: false, di: 0, dc: false, dPicked: false, dMins: 0, dCountdown: 0, dDone: false,
+    // content editor
+    ga: {}, eb: [],
+    // line editor
+    ls: [],
+    // standalone Write-or-Else
+    wt: '', ww: false, wi: 0, wc: false, wPicked: false, wMins: 0, wCountdown: 0, wDone: false,
+    // linepuncher
+    pb: [], pei: null, ped: ''
+  };
+
+  var wTimer = null, fTimer = null;
+
+  function save() {
+    if (!st.aid || !st.ad) return;
+    svDoc(st.aid, st.ad);
+    var docs = lsDocs();
+    for (var i = 0; i < docs.length; i++) {
+      if (docs[i].id === st.aid) {
+        docs[i].updated = Date.now();
+        if (st.ad.mode === 'framework') docs[i].stage = st.ad.stage;
+      }
+    }
+    svDocs(docs);
+    st.docs = docs;
+  }
+
+  function getApp() { return document.getElementById('app'); }
+
+  // ── Render dispatch ──
+  function render() {
+    var a = getApp();
+    if (!a) return;
+    switch (st.v) {
+      case 'home': rHome(a); break;
+      case 'editor': rEditor(a); break;
+      case 'fw': rFw(a); break;
+      case 'lp': rLp(a); break;
+      default: rHome(a);
+    }
+  }
+
+  function preview(d) {
+    if (!d) return '';
+    if (d.mode === 'freeform') return (d.content || '').trim();
+    if (!d.blocks) return d.content || '';
+    var s = gSubs(d.frameType || 'story'), p = [];
+    SECS.forEach(function(sec) {
+      s.forEach(function(sub) { var v = d.blocks[sec.id+':'+sub]; if (v) p.push(v); });
+      var dr = d.blocks['draft:'+sec.id]; if (dr) p.push(dr);
+    });
+    return p.join(' ').slice(0, 300);
+  }
+
+  // ══════════════════════════════════════
+  // HOME
+  // ══════════════════════════════════════
+  function rHome(a) {
+    var h = '<div style="animation:fadeIn .3s ease">';
+
+    // Header
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:40px">';
+    h += '<div>';
+    h += '<h1 class="heading" style="font-size:32px;font-weight:700;letter-spacing:-.5px;margin-bottom:2px">Writing<span style="color:var(--primary)">Frames</span></h1>';
+    h += '<p style="font-size:14px;color:var(--muted);font-style:italic">For the writer who still cares</p>';
+    h += '</div>';
+    h += '<button class="btn" style="background:var(--newbtn);color:#fff;border:none;padding:16px 28px;font-size:13px;align-self:stretch" onclick="window._wf.create()">+ New Document</button>';
+    h += '</div>';
+
+    // Cards
+    if (st.docs.length === 0) {
+      h += '<div style="text-align:center;padding:60px 0;color:var(--muted)">';
+      h += '<p style="font-size:16px;margin-bottom:8px">No documents yet</p>';
+      h += '<p class="mono" style="font-size:11px;color:var(--secondary)">Create one to get started</p></div>';
+    } else {
+      st.docs.forEach(function(doc, i) {
+        var data = lsDoc(doc.id);
+        var pv = data ? preview(data) : '';
+        var wc = cw(pv);
+        var isFw = data && data.mode === 'framework';
+        var tl = isFw ? (data.frameType ? data.frameType.charAt(0).toUpperCase() + data.frameType.slice(1) : 'Framework') : 'Freeform';
+
+        h += '<div class="doc-card" style="animation-delay:' + (i*0.06) + 's" onclick="window._wf.open(\'' + doc.id + '\')">';
+        h += '<button class="del-btn" onclick="event.stopPropagation();window._wf.del(\'' + doc.id + '\')">&times;</button>';
+        h += '<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">';
+        h += '<span class="badge ' + (isFw ? 'badge-fw' : 'badge-ff') + '">' + esc(tl) + '</span>';
+        if (doc.stage && isFw) h += '<span class="badge badge-stage">' + esc(SL[doc.stage] || doc.stage) + '</span>';
+        h += '</div>';
+        h += '<div class="title">' + esc(doc.title) + '</div>';
+        h += '<div class="preview">' + (pv ? esc(pv.slice(0,200)) : '<span style="font-style:italic;color:var(--light)">No content yet</span>') + '</div>';
+        h += '<div class="meta mono"><span>' + wc + ' words</span><span>' + fmt(doc.updated) + '</span></div>';
+        h += '</div>';
+      });
+    }
+
+    h += '</div>';
+    a.innerHTML = h;
+  }
+
+  // ══════════════════════════════════════
+  // CREATE
+  // ══════════════════════════════════════
+  function showModal() {
+    var old = document.getElementById('modal');
+    if (old) old.remove();
+
+    var ov = document.createElement('div');
+    ov.id = 'modal';
+    ov.className = 'modal-bg';
+    ov.onclick = function(e) { if (e.target === ov) ov.remove(); };
+
+    ov.innerHTML =
+      '<div class="modal-box">' +
+      '<h2>New Document</h2>' +
+      '<div class="mf"><label>Title</label><input type="text" id="m-title" placeholder="e.g. Taco Tuesday"></div>' +
+      '<div class="mf"><label>Mode</label>' +
+        '<div class="tg">' +
+          '<div class="tc sel" id="m-fw" onclick="window._wf.setMode(\'framework\')"><p style="font-size:15px;font-weight:600;margin-bottom:4px">Framework</p><p class="mono" style="font-size:10px;color:var(--muted)">Story frame workflow</p></div>' +
+          '<div class="tc" id="m-ff" onclick="window._wf.setMode(\'freeform\')"><p style="font-size:15px;font-weight:600;margin-bottom:4px">Freeform</p><p class="mono" style="font-size:10px;color:var(--muted)">Open doc + tools</p></div>' +
+        '</div>' +
+      '</div>' +
+      '<div id="m-ft"></div>' +
+      '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px">' +
+        '<button class="btn" onclick="window._wf.cancelModal()">Cancel</button>' +
+        '<button class="btn btn-dark" onclick="window._wf.confirmModal()">Create</button>' +
+      '</div>' +
+      '</div>';
+
+    document.body.appendChild(ov);
+    window._wf._mode = 'framework';
+    setTimeout(function() { var el = document.getElementById('m-title'); if (el) el.focus(); }, 100);
+  }
+
+  // ══════════════════════════════════════
+  // EDITOR
+  // ══════════════════════════════════════
+  function rEditor(a) {
+    var d = st.ad;
+    if (!d) { st.v = 'home'; render(); return; }
+    var isFw = d.mode === 'framework';
+    var content = d.content || '';
+    var wc = cw(content);
+    var title = d.title || 'Untitled';
+
+    var h = '<div style="animation:fadeIn .3s ease">';
+
+    // Topbar
+    h += '<div class="topbar">';
+    h += '<div class="topbar-left"><button class="back-btn" onclick="window._wf.goHome()">&larr; back</button><span class="ed-title">' + esc(title) + '</span></div>';
+    h += '<div class="topbar-right">';
+    if (isFw) h += '<button class="btn btn-sm btn-blue" onclick="window._wf.launchFw()">Framework &#9656;</button>';
+    h += '<button class="btn btn-sm" onclick="window._wf.launchWoe()" style="border-color:var(--primary);color:var(--primary)">Write-or-Else</button>';
+    h += '<button class="btn btn-sm" onclick="window._wf.launchLp()" style="border-color:var(--lavender);color:var(--lavender)">LinePuncher</button>';
+    h += '</div></div>';
+
+    // Stage bar
+    if (isFw) {
+      h += '<div class="stage-bar">';
+      STG.forEach(function(s) {
+        h += '<button class="' + (s === d.stage ? 'on' : '') + '" onclick="window._wf.setStage(\'' + s + '\')">' + SL[s] + '</button>';
+      });
+      h += '</div>';
+    }
+
+    // Notes (framework only)
+    if (isFw) {
+      h += '<textarea id="ed-notes" class="ed-ta" style="min-height:60px;background:var(--surface);margin-bottom:12px;font-size:14px" placeholder="Notes..." oninput="window._wf.onNotes(this.value)">' + esc(d.notes || '') + '</textarea>';
+    }
+
+    // Main textarea
+    h += '<textarea class="ed-ta" id="ed-text" placeholder="Start writing..." oninput="window._wf.onEdit(this.value)">' + esc(content) + '</textarea>';
+    h += '<div class="ed-footer"><span class="mono" id="ed-wc">' + wc + ' words</span><span class="mono">' + (isFw ? SL[d.stage] || '' : 'Freeform') + '</span></div>';
+    h += '</div>';
+    a.innerHTML = h;
+  }
+
+  // ══════════════════════════════════════
+  // WRITE-OR-ELSE (standalone overlay)
+  // ══════════════════════════════════════
+  function clearW() { clearInterval(wTimer); wTimer = null; }
+
+  function showWoe() {
+    var old = document.getElementById('woe');
+    if (old) old.remove();
+
+    var ov = document.createElement('div');
+    ov.id = 'woe';
+    ov.className = 'woe-bg';
+
+    // Timer pick
+    if (!st.wPicked) {
+      ov.innerHTML = '<div class="woe-box">' +
+        '<div style="text-align:center;margin-bottom:20px"><h2 class="heading" style="font-size:22px;font-weight:700;color:var(--bg);margin-bottom:4px">Write-or-Else</h2><p class="mono" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Choose your countdown</p></div>' +
+        '<div style="display:flex;gap:16px;justify-content:center;margin-top:32px">' +
+          '<div onclick="window._wf.wPick(1)" style="background:rgba(245,245,247,.06);border:1px solid rgba(245,245,247,.1);border-radius:12px;padding:28px 36px;cursor:pointer;text-align:center"><div class="heading" style="font-size:32px;font-weight:700;color:var(--bg)">1</div><div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px">MINUTE</div></div>' +
+          '<div onclick="window._wf.wPick(3)" style="background:rgba(245,245,247,.06);border:1px solid rgba(245,245,247,.1);border-radius:12px;padding:28px 36px;cursor:pointer;text-align:center"><div class="heading" style="font-size:32px;font-weight:700;color:var(--bg)">3</div><div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px">MINUTES</div></div>' +
+          '<div onclick="window._wf.wPick(5)" style="background:rgba(245,245,247,.06);border:1px solid rgba(245,245,247,.1);border-radius:12px;padding:28px 36px;cursor:pointer;text-align:center"><div class="heading" style="font-size:32px;font-weight:700;color:var(--bg)">5</div><div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px">MINUTES</div></div>' +
+        '</div>' +
+        '<div style="text-align:center;margin-top:24px"><button class="btn btn-sm" onclick="window._wf.wCancel()" style="color:var(--muted);border-color:rgba(245,245,247,.15);background:none">Cancel</button></div></div>';
+      document.body.appendChild(ov);
+      return;
+    }
+
+    // Writing screen
+    var tl = st.wCountdown;
+    var total = st.wMins * 60;
+    var p = total > 0 ? tl / total : 0;
+    var tc = st.wDone ? 'var(--success)' : p > 0.5 ? 'var(--secondary)' : p > 0.2 ? 'var(--lavender)' : 'var(--primary)';
+    var ph = st.wc ? 'Gone. Timer reset. Go again...' : 'Start typing...';
+    var wc = cw(st.wt);
+
+    var inner = '<div class="woe-box">';
+    inner += '<div style="text-align:center;margin-bottom:20px"><h2 class="heading" style="font-size:22px;font-weight:700;color:var(--bg);margin-bottom:4px">Write-or-Else</h2>';
+    inner += '<p class="mono" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">' + (st.wDone ? 'Timer complete — edit freely' : st.wMins + ' min · ' + IDLE + 's idle limit') + '</p></div>';
+
+    // Clock
+    if (!st.wDone) {
+      inner += '<div style="text-align:center;margin-bottom:12px"><span class="heading" id="w-clk" style="font-size:36px;font-weight:700;color:' + tc + '">' + ftime(tl) + '</span></div>';
+      inner += '<div style="width:100%;height:3px;background:rgba(245,245,247,.08);border-radius:2px;margin-bottom:12px;overflow:hidden"><div id="w-bar" style="height:100%;border-radius:2px;width:' + (p*100) + '%;background:' + tc + ';transition:width 1s linear,background .5s"></div></div>';
+      inner += '<div style="width:100%;height:2px;background:rgba(245,245,247,.08);border-radius:2px;margin-bottom:16px;overflow:hidden"><div id="w-idle" style="height:100%;width:100%;background:rgba(245,245,247,.15);transition:width 1s linear"></div></div>';
+    }
+
+    // Cleared message
+    if (st.wc) {
+      inner += '<div style="text-align:center;margin-bottom:20px;padding:16px;background:rgba(232,21,26,.08);border:1px solid rgba(232,21,26,.2);border-radius:8px"><p style="color:var(--primary);font-size:16px;font-weight:600;margin-bottom:4px">Gone.</p><p style="color:var(--muted);font-size:13px">Timer reset. Keep writing.</p></div>';
+    }
+
+    inner += '<textarea class="woe-ta" id="w-ta" placeholder="' + ph + '">' + esc(st.wt) + '</textarea>';
+    inner += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 4px">';
+    inner += '<span class="mono" style="font-size:12px;color:var(--muted)" id="w-wc">' + wc + ' words</span>';
+    inner += '<div style="display:flex;gap:10px;align-items:center">';
+    inner += '<button class="btn btn-sm btn-blue" onclick="window._wf.wDone()">Done</button>';
+    inner += '<button class="btn btn-sm" onclick="window._wf.wCancel()" style="color:var(--muted);border-color:rgba(245,245,247,.15);background:none">Cancel</button>';
+    inner += '</div></div></div>';
+
+    ov.innerHTML = inner;
+    document.body.appendChild(ov);
+
+    var ta = document.getElementById('w-ta');
+    if (ta) {
+      ta.addEventListener('input', function() {
+        st.wt = ta.value;
+        st.wi = 0;
+        st.wc = false;
+        var wcEl = document.getElementById('w-wc');
+        if (wcEl) wcEl.textContent = cw(ta.value) + ' words';
+        var idl = document.getElementById('w-idle');
+        if (idl) { idl.style.width = '100%'; idl.style.background = 'rgba(245,245,247,.15)'; }
+
+        if (!st.ww && ta.value.length > 0 && !st.wDone) {
+          st.ww = true;
+          wTimer = setInterval(function() {
+            st.wi++;
+            st.wCountdown--;
+
+            // Update clock
+            var clk = document.getElementById('w-clk');
+            var bar = document.getElementById('w-bar');
+            var tl = st.wCountdown;
+            var tot = st.wMins * 60;
+            var pr = tot > 0 ? tl / tot : 0;
+            var c = pr > 0.5 ? 'var(--secondary)' : pr > 0.2 ? 'var(--lavender)' : 'var(--primary)';
+            if (clk) { clk.textContent = ftime(tl); clk.style.color = c; }
+            if (bar) { bar.style.width = (pr*100) + '%'; bar.style.background = c; }
+
+            // Update idle bar
+            var ig = st.wi / IDLE;
+            var idl = document.getElementById('w-idle');
+            if (idl) { idl.style.width = ((1-ig)*100) + '%'; idl.style.background = ig > 0.7 ? 'var(--primary)' : 'rgba(245,245,247,.15)'; }
+
+            // Idle limit hit
+            if (st.wi >= IDLE) {
+              st.wt = '';
+              st.ww = false;
+              st.wc = true;
+              st.wCountdown = st.wMins * 60;
+              st.wi = 0;
+              clearW();
+              showWoe();
+              return;
+            }
+
+            // Countdown done
+            if (st.wCountdown <= 0) {
+              clearW();
+              st.wDone = true;
+              st.ww = false;
+              // Auto-save
+              if (st.wt.trim() && st.ad) {
+                var ex = (st.ad.content || '').trim();
+                st.ad.content = ex ? ex + '\n\n' + st.wt.trim() : st.wt.trim();
+                save();
+              }
+              showWoe();
+            }
+          }, 1000);
+        }
+      });
+      setTimeout(function() { ta.focus(); }, 80);
+    }
+  }
+
+  // ══════════════════════════════════════
+  // LINEPUNCHER
+  // ══════════════════════════════════════
+  function rLp(a) {
+    var ts = st.pb.reduce(function(s, b) { return s + splitS(b.text).length; }, 0);
+    var h = '<div style="animation:fadeIn .3s ease">';
+
+    h += '<div class="lp-header"><div style="display:flex;align-items:center;gap:12px"><button class="back-btn" style="color:var(--bg);opacity:.6" onclick="window._wf.exitLp()">&larr;</button><h2 class="heading" style="font-size:22px;font-weight:800;color:var(--bg)">Line<span style="color:var(--primary)">Puncher</span></h2></div><div class="mono" style="font-size:11px;color:var(--muted);display:flex;gap:12px"><span>' + st.pb.length + ' blocks</span><span style="color:var(--primary)">' + ts + ' punchlines</span></div></div>';
+
+    // Input
+    h += '<div style="background:var(--white);border-radius:10px;padding:18px;border:1px solid var(--border);margin-bottom:16px"><div class="mono" style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--secondary);margin-bottom:8px">Add more copy</div><textarea id="lp-in" placeholder="Paste additional text..." style="width:100%;min-height:60px;border:none;outline:none;resize:vertical;font-family:\'Source Serif 4\',Georgia,serif;font-size:14px;line-height:1.7;color:var(--text);background:transparent;padding:0"></textarea><button class="btn btn-sm" style="margin-top:8px;background:var(--primary);color:#fff;border-color:var(--primary)" onclick="window._wf.lpAdd()">Add Blocks</button></div>';
+
+    // Legend
+    h += '<div class="mono" style="font-size:11px;opacity:.45;margin-bottom:14px;display:flex;gap:16px"><div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-bottom:2px solid var(--primary);background:rgba(232,21,26,.1);border-radius:2px"></div><span>Punchline Zone</span></div><span>Double-click to edit</span></div>';
+
+    // Blocks
+    st.pb.forEach(function(b, idx) {
+      if (st.pei === b.id) {
+        h += '<div class="lp-block" style="border:2px solid var(--secondary)"><textarea id="lp-ea" style="width:100%;border:none;outline:none;resize:none;font-family:\'Source Serif 4\',Georgia,serif;font-size:15px;line-height:1.75;color:var(--text);background:transparent;padding:0">' + esc(st.ped) + '</textarea><div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-sm btn-blue" onclick="window._wf.lpSave(' + b.id + ')">Save</button><button class="btn btn-sm btn-ghost" onclick="window._wf.lpCancelEdit()">Cancel</button></div></div>';
+      } else {
+        h += '<div class="lp-block" ondblclick="window._wf.lpEdit(' + b.id + ')"><div class="lp-tools">';
+        if (idx > 0) h += '<button class="tb" onclick="window._wf.lpMov(' + b.id + ',-1)">&#8593;</button>';
+        if (idx < st.pb.length - 1) h += '<button class="tb" onclick="window._wf.lpMov(' + b.id + ',1)">&#8595;</button>';
+        h += '<button class="tb" onclick="window._wf.lpEdit(' + b.id + ')">&#9998;</button>';
+        h += '<button class="tb dg" onclick="window._wf.lpDel(' + b.id + ')">&times;</button>';
+        h += '</div><div style="font-size:15px;line-height:1.75;padding-right:60px">' + hlHtml(b.text) + '</div></div>';
+      }
+    });
+
+    if (!st.pb.length) h += '<div style="text-align:center;padding:40px;color:var(--muted);font-style:italic">No blocks — paste copy above</div>';
+    h += '<div style="display:flex;justify-content:flex-end;margin-top:16px"><button class="btn btn-dark" onclick="window._wf.lpBack()">Save to Document</button></div>';
+    h += '</div>';
+    a.innerHTML = h;
+
+    setTimeout(function() {
+      var ea = document.getElementById('lp-ea');
+      if (ea) {
+        ea.addEventListener('input', function() { st.ped = ea.value; });
+        ea.focus();
+        ea.style.height = ea.scrollHeight + 'px';
+      }
+    }, 50);
+  }
+
+  // ══════════════════════════════════════
+  // FRAMEWORK
+  // ══════════════════════════════════════
+  function rFw(a) {
+    switch (st.fv) {
+      case 'outline': rFO(a); break;
+      case 'dr': rFDR(a); break;
+      case 'draft': rFDraft(a); break;
+      case 'cg': rFCG(a); break;
+      case 'ce': rFCE(a); break;
+      case 'le': rFLE(a); break;
+      default: st.v = 'editor'; render();
+    }
+  }
+
+  // -- Outline --
+  function rFO(a) {
+    var d = st.ad, subs = gSubs(d.frameType), sec = SECS[st.fsi], sub = subs[st.fsbi];
+    var total = SECS.length * subs.length, cur = st.fsi * subs.length + st.fsbi + 1;
+
+    var h = '<div style="animation:fadeIn .3s ease">';
+    h += '<div class="prog">';
+    for (var i = 0; i < total; i++) h += '<div class="' + (i < cur ? 'on' : '') + '"></div>';
+    h += '</div>';
+    h += '<p class="ph-label">Phase 1 — Outline</p>';
+    h += '<h1 class="heading" style="font-size:24px;margin-bottom:6px">' + sec.label + '</h1>';
+    h += '<p style="font-size:15px;color:var(--muted);margin-bottom:24px">' + esc(sub) + '</p>';
+
+    // Filled sub-blocks
+    subs.forEach(function(s, i) {
+      if (i >= st.fsbi) return;
+      var v = d.blocks[sec.id + ':' + s];
+      if (!v) return;
+      h += '<div class="o-card"><div class="o-label">' + esc(s) + '</div><p style="font-size:14px;line-height:1.5">' + esc(v) + '</p></div>';
+    });
+
+    var ex = d.blocks[sec.id + ':' + sub] || '';
+    h += '<textarea id="fw-in" class="ed-ta" style="min-height:100px" placeholder="What\'s your ' + sub.toLowerCase() + '?">' + esc(ex) + '</textarea>';
+    h += '<div style="display:flex;justify-content:space-between;margin-top:14px"><button class="btn btn-ghost" onclick="window._wf.fwBack()">&larr; Editor</button><button class="btn btn-dark" onclick="window._wf.fwSubO()">Next</button></div>';
+    h += '</div>';
+    a.innerHTML = h;
+
+    setTimeout(function() {
+      var ta = document.getElementById('fw-in');
+      if (ta) {
+        ta.focus();
+        ta.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window._wf.fwSubO(); }
+        });
+      }
+    }, 50);
+  }
+
+  // -- Draft Review --
+  function rFDR(a) {
+    var d = st.ad, sec = SECS[st.fsi], subs = gSubs(d.frameType);
+    var h = '<div style="animation:fadeIn .3s ease">';
+    h += '<div class="prog">';
+    SECS.forEach(function(s, i) { h += '<div class="' + (i <= st.fsi ? 'on' : '') + '"></div>'; });
+    h += '</div>';
+    h += '<p class="ph-label">Phase 2 — Draft</p>';
+    h += '<h1 class="heading" style="font-size:24px;margin-bottom:6px">' + sec.label + '</h1>';
+    h += '<p style="font-size:13px;color:var(--muted);margin-bottom:24px">Target: ' + sec.target + ' words · Review outline, then write.</p>';
+    subs.forEach(function(sub) {
+      h += '<div class="o-card"><div class="o-label">' + esc(sub) + '</div><p style="font-size:14px;line-height:1.5">' + esc(d.blocks[sec.id+':'+sub] || '—') + '</p></div>';
+    });
+    h += '<div style="display:flex;justify-content:space-between;margin-top:20px"><button class="btn btn-ghost" onclick="window._wf.fwBack()">&larr; Editor</button><button class="btn btn-dark" onclick="window._wf.fwStartDraft()">Start Writing</button></div>';
+    h += '</div>';
+    a.innerHTML = h;
+  }
+
+  // -- Draft (Write-or-Else with idle-delete + countdown) --
+  function clearF() { clearInterval(fTimer); fTimer = null; }
+
+  function rFDraft(a) {
+    var sec = SECS[st.fsi], wc = cw(st.dt), met = wc >= sec.target;
+
+    var h = '<div style="animation:fadeIn .3s ease">';
+    h += '<div class="prog">';
+    SECS.forEach(function(s, i) { h += '<div class="' + (i <= st.fsi ? 'on' : '') + '"></div>'; });
+    h += '</div>';
+
+    // Timer pick
+    if (!st.dPicked) {
+      h += '<div style="text-align:center;margin-bottom:24px"><p class="ph-label">Phase 2 — Draft</p><h1 class="heading" style="font-size:28px;text-transform:uppercase;letter-spacing:.06em">Write-or-Else</h1><p style="font-size:15px;color:var(--secondary);font-weight:500;margin-top:4px">' + sec.label + '</p><p style="font-size:14px;color:var(--muted);font-style:italic;margin-top:4px">Choose your countdown</p></div>';
+      h += '<div style="display:flex;gap:16px;justify-content:center;margin-top:24px">';
+      [1,3,5].forEach(function(m) {
+        h += '<div onclick="window._wf.fwPickTime(' + m + ')" style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:28px 36px;cursor:pointer;text-align:center;transition:all .2s"><div class="heading" style="font-size:32px;font-weight:700">' + m + '</div><div class="mono" style="font-size:11px;color:var(--muted);margin-top:4px">' + (m===1?'MINUTE':'MINUTES') + '</div></div>';
+      });
+      h += '</div><div style="display:flex;justify-content:center;margin-top:20px"><button class="btn btn-ghost" onclick="window._wf.fwBack()">&larr; Editor</button></div>';
+      h += '</div>';
+      a.innerHTML = h;
+      return;
+    }
+
+    // Writing screen
+    var tl = st.dCountdown, total = st.dMins * 60, p = total > 0 ? tl / total : 0;
+    var tc = st.dDone ? 'var(--success)' : p > 0.5 ? 'var(--secondary)' : p > 0.2 ? 'var(--lavender)' : 'var(--primary)';
+
+    h += '<div style="text-align:center;margin-bottom:24px"><p class="ph-label">Phase 2 — Draft</p><h1 class="heading" style="font-size:28px;text-transform:uppercase;letter-spacing:.06em">Write-or-Else</h1><p style="font-size:15px;color:var(--secondary);font-weight:500;margin-top:4px">' + sec.label + '</p><p class="mono" style="font-size:11px;color:var(--muted);margin-top:4px">' + (st.dDone ? 'Edit freely' : st.dMins + ' min · ' + IDLE + 's idle limit') + '</p></div>';
+
+    if (!st.dDone) {
+      h += '<div style="text-align:center;margin-bottom:12px"><span class="heading" id="f-clk" style="font-size:36px;font-weight:700;color:' + tc + '">' + ftime(tl) + '</span></div>';
+      h += '<div style="width:100%;height:3px;background:var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden"><div id="f-bar" style="height:100%;border-radius:2px;width:' + (p*100) + '%;background:' + tc + ';transition:width 1s linear,background .5s"></div></div>';
+      h += '<div style="width:100%;height:2px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden"><div id="f-idle" style="height:100%;width:100%;background:var(--border);transition:width 1s linear"></div></div>';
+    }
+
+    if (st.dc) {
+      h += '<div style="text-align:center;margin-bottom:20px;padding:16px;background:rgba(232,21,26,.05);border:1px solid rgba(232,21,26,.2);border-radius:8px"><p style="color:var(--primary);font-size:16px;font-weight:600;margin-bottom:4px">Gone.</p><p style="color:var(--muted);font-size:13px">Timer reset. Keep writing.</p></div>';
+    }
+
+    h += '<textarea class="ed-ta" id="f-ta" placeholder="' + (st.dc ? 'Try again...' : 'Start writing...') + '">' + esc(st.dt) + '</textarea>';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:13px;color:var(--muted)"><span class="mono" id="f-wc" style="font-weight:600;color:' + (met ? 'var(--success)' : 'var(--primary)') + '">' + wc + ' / ' + sec.target + '</span><div style="display:flex;align-items:center;gap:12px"><button class="btn btn-sm btn-blue" onclick="window._wf.fwFinDraft()">Done</button></div></div>';
+
+    if (st.dDone || (!st.dw && st.dt.length > 0 && !st.dc)) {
+      var nl = st.fsi < SECS.length - 1 ? 'Next: ' + SECS[st.fsi+1].label : 'Finish Drafting';
+      h += '<div style="margin-top:20px;padding:16px;background:rgba(107,143,212,.06);border:1px solid rgba(107,143,212,.25);border-radius:8px;text-align:center"><p style="color:var(--secondary);font-size:14px;margin-bottom:8px">' + wc + ' / ' + sec.target + ' words</p><button class="btn btn-dark" onclick="window._wf.fwSubDraft()">' + nl + '</button></div>';
+    }
+
+    h += '</div>';
+    a.innerHTML = h;
+
+    setTimeout(function() {
+      var ta = document.getElementById('f-ta');
+      if (!ta) return;
+      ta.focus();
+      ta.addEventListener('input', function() {
+        st.dt = ta.value;
+        st.di = 0;
+        st.dc = false;
+
+        var w = cw(ta.value);
+        var we = document.getElementById('f-wc');
+        if (we) { we.textContent = w + ' / ' + sec.target; we.style.color = w >= sec.target ? 'var(--success)' : 'var(--primary)'; }
+        var idl = document.getElementById('f-idle');
+        if (idl) { idl.style.width = '100%'; idl.style.background = 'var(--border)'; }
+
+        if (!st.dw && ta.value.length > 0 && !st.dDone) {
+          st.dw = true;
+          fTimer = setInterval(function() {
+            st.di++;
+            st.dCountdown--;
+
+            var tl = st.dCountdown, tot = st.dMins * 60, pr = tot > 0 ? tl / tot : 0;
+            var c = pr > 0.5 ? 'var(--secondary)' : pr > 0.2 ? 'var(--lavender)' : 'var(--primary)';
+            var clk = document.getElementById('f-clk'), bar = document.getElementById('f-bar');
+            if (clk) { clk.textContent = ftime(tl); clk.style.color = c; }
+            if (bar) { bar.style.width = (pr*100) + '%'; bar.style.background = c; }
+
+            var ig = st.di / IDLE;
+            var idl = document.getElementById('f-idle');
+            if (idl) { idl.style.width = ((1-ig)*100) + '%'; idl.style.background = ig > 0.7 ? 'var(--primary)' : 'var(--border)'; }
+
+            if (st.di >= IDLE) {
+              st.dt = ''; st.dw = false; st.dc = true;
+              st.dCountdown = st.dMins * 60; st.di = 0;
+              clearF(); render(); return;
+            }
+            if (st.dCountdown <= 0) {
+              clearF(); st.dDone = true; st.dw = false; render();
+            }
+          }, 1000);
+        }
+      });
+    }, 50);
+  }
+
+  // -- Content Guiding --
+  function rFCG(a) {
+    var qs = ['Voice','Perennial','What is the subtext?','Who is the character?','Where is the tension?'];
+    var h = '<div style="animation:fadeIn .3s ease">';
+    h += '<p class="ph-label">Phase 3 — Content Editor</p>';
+    h += '<h1 class="heading" style="font-size:24px;margin-bottom:6px">Guiding Questions</h1>';
+    h += '<p style="font-size:13px;color:var(--muted);margin-bottom:24px">Answer these before editing.</p>';
+    qs.forEach(function(q) {
+      h += '<div class="o-card" style="margin-bottom:16px"><div class="o-label">' + esc(q) + '</div><textarea class="fgta" data-q="' + esc(q) + '" style="width:100%;min-height:50px;margin-top:6px;border:1px solid var(--border);border-radius:6px;font-family:\'Source Serif 4\',Georgia,serif;font-size:14px;line-height:1.5;padding:10px;color:var(--text);background:var(--white);outline:none;resize:vertical" placeholder="Your answer...">' + esc(st.ga[q] || '') + '</textarea></div>';
+    });
+    h += '<div style="display:flex;justify-content:space-between;margin-top:16px"><button class="btn btn-ghost" onclick="window._wf.fwBack()">&larr; Editor</button><button class="btn btn-dark" onclick="window._wf.fwSubGuiding()">Start Editing</button></div>';
+    h += '</div>';
+    a.innerHTML = h;
+  }
+
+  // -- Content Edit --
+  function rFCE(a) {
+    var sec = SECS[st.fsi];
+    var tw = st.eb.reduce(function(s, b) { return s + cw(b.text); }, 0);
+
+    var h = '<div style="animation:fadeIn .3s ease">';
+    h += '<div class="prog">';
+    SECS.forEach(function(s, i) { h += '<div class="' + (i <= st.fsi ? 'on' : '') + '"></div>'; });
+    h += '</div>';
+    h += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><div><p class="ph-label">Phase 3 — Content Editor</p><h1 class="heading" style="font-size:22px;text-transform:uppercase;letter-spacing:.06em">' + sec.label + '</h1><p style="font-size:13px;color:var(--muted)">' + tw + ' words · ' + st.eb.length + ' blocks</p></div><button class="btn btn-ghost btn-sm" onclick="window._wf.fwAddEB()">+ Block</button></div>';
+
+    h += '<div style="background:var(--white);border-radius:10px;border:1px solid var(--border);overflow:hidden">';
+    if (!st.eb.length) {
+      h += '<div style="padding:32px;text-align:center;color:var(--light);font-size:14px;font-style:italic">No blocks</div>';
+    }
+    st.eb.forEach(function(b, idx) {
+      h += '<div class="brow" draggable="true" data-idx="' + idx + '"><div style="color:var(--border);font-size:14px;cursor:grab;user-select:none;padding-top:4px;flex-shrink:0;width:18px;text-align:center">&#10239;</div><div contenteditable="true" class="feb" data-idx="' + idx + '" style="flex:1;font-size:15px;line-height:1.6;cursor:text;padding:4px 0;min-height:28px;outline:none;color:' + (b.text ? 'var(--text)' : 'var(--light)') + '">' + esc(b.text || 'Click to edit...') + '</div><button style="background:none;border:none;color:var(--border);cursor:pointer;font-size:16px;padding:4px;flex-shrink:0;line-height:1" onclick="window._wf.fwDelEB(' + idx + ')">&times;</button></div>';
+    });
+    h += '</div>';
+
+    var nl = st.fsi < SECS.length - 1 ? 'Done — Next: ' + SECS[st.fsi+1].label : 'Done — Move to Line Editor';
+    h += '<div style="display:flex;justify-content:flex-end;margin-top:20px"><button class="btn btn-dark" onclick="window._wf.fwSubCE()">' + nl + '</button></div>';
+    h += '</div>';
+    a.innerHTML = h;
+
+    setTimeout(function() {
+      document.querySelectorAll('.feb').forEach(function(el) {
+        el.addEventListener('blur', function() {
+          var i = parseInt(el.dataset.idx);
+          if (!isNaN(i) && st.eb[i]) st.eb[i].text = el.textContent;
+        });
+        el.addEventListener('focus', function() {
+          if (el.textContent === 'Click to edit...') el.textContent = '';
+        });
+      });
+      document.querySelectorAll('.brow[draggable]').forEach(function(r) {
+        r.addEventListener('dragstart', function(e) { e.dataTransfer.setData('text/plain', r.dataset.idx); });
+        r.addEventListener('dragover', function(e) { e.preventDefault(); });
+        r.addEventListener('drop', function(e) {
+          e.preventDefault();
+          var fi = parseInt(e.dataTransfer.getData('text/plain')), ti = parseInt(r.dataset.idx);
+          if (isNaN(fi) || isNaN(ti) || fi === ti) return;
+          var mv = st.eb.splice(fi, 1)[0]; st.eb.splice(ti, 0, mv); render();
+        });
+      });
+    }, 50);
+  }
+
+  // -- Line Editor --
+  function rFLE(a) {
+    var tw = st.ls.reduce(function(s, b) { return s + cw(b.text); }, 0);
+    var h = '<div style="animation:fadeIn .3s ease">';
+    h += '<p class="ph-label">Phase 4 — Line Editor</p>';
+    h += '<h1 class="heading" style="font-size:24px;margin-bottom:6px">Punchline Polish</h1>';
+    h += '<p style="font-size:13px;color:var(--muted);margin-bottom:24px">' + st.ls.length + ' sentences · ' + tw + ' words · Edit for maximum impact.</p>';
+
+    st.ls.forEach(function(sn, idx) {
+      var w = sn.text.split(/\s+/), m = gMid(sn.text);
+      var bf = esc(w.slice(0, m).join(' ')), af = esc(w.slice(m).join(' '));
+      h += '<div class="lb"><span class="mono" style="position:absolute;top:4px;right:8px;font-size:10px;color:var(--secondary);opacity:.5">S' + (idx+1) + '</span><div contenteditable="true" class="flb" data-idx="' + idx + '" style="font-size:15px;line-height:1.75;outline:none;padding-right:60px"><span>' + bf + ' </span><span class="pl">' + af + '</span></div><div style="display:flex;gap:4px;margin-top:4px">';
+      if (idx > 0) h += '<button class="tb" onclick="window._wf.fwLM(' + idx + ',-1)">&#8593;</button>';
+      if (idx < st.ls.length - 1) h += '<button class="tb" onclick="window._wf.fwLM(' + idx + ',1)">&#8595;</button>';
+      h += '<button class="tb dg" onclick="window._wf.fwLD(' + idx + ')">&times;</button></div></div>';
+    });
+
+    h += '<div style="display:flex;justify-content:flex-end;margin-top:20px"><button class="btn btn-dark" onclick="window._wf.fwSubLE()">Done — Finish Essay</button></div>';
+    h += '</div>';
+    a.innerHTML = h;
+
+    setTimeout(function() {
+      document.querySelectorAll('.flb').forEach(function(el) {
+        el.addEventListener('blur', function() {
+          var i = parseInt(el.dataset.idx);
+          if (!isNaN(i) && st.ls[i]) st.ls[i].text = el.textContent;
+        });
+      });
+    }, 50);
+  }
+
+  // ══════════════════════════════════════
+  // PUBLIC API
+  // ══════════════════════════════════════
+  window._wf = {
+    _mode: 'framework',
+
+    // Home
+    create: function() { showModal(); },
+    open: function(id) { var d = lsDoc(id); if (!d) return; st.aid = id; st.ad = d; st.v = 'editor'; render(); },
+    del: function(id) { if (!confirm('Delete this document?')) return; rmDoc(id); st.docs = st.docs.filter(function(d){return d.id!==id}); svDocs(st.docs); if(st.aid===id){st.aid=null;st.ad=null;st.v='home';} render(); },
+
+    // Modal
+    setMode: function(m) {
+      this._mode = m;
+      var fw = document.getElementById('m-fw'), ff = document.getElementById('m-ff');
+      if (fw) fw.className = 'tc' + (m==='framework' ? ' sel' : '');
+      if (ff) ff.className = 'tc' + (m==='freeform' ? ' sel' : '');
+      var ftd = document.getElementById('m-ft');
+      if (m === 'framework' && ftd) ftd.innerHTML = '<div class="mf"><label>Frame Type</label><select id="m-ftype"><option value="story">Story</option><option value="opinion">Opinion</option><option value="persuasive">Persuasive</option><option value="comedy">Comedy</option></select></div>';
+      else if (ftd) ftd.innerHTML = '';
+    },
+    cancelModal: function() { var m = document.getElementById('modal'); if (m) m.remove(); },
+    confirmModal: function() {
+      var te = document.getElementById('m-title'), t = (te ? te.value : '').trim();
+      if (!t) { if (te) te.focus(); return; }
+      var mode = this._mode || 'framework';
+      var id = uid(), now = Date.now();
+      var entry = {id:id, title:t, created:now, updated:now, mode:mode, stage:mode==='framework'?'outline':null};
+      var data;
+      if (mode === 'framework') {
+        var fte = document.getElementById('m-ftype'), ft = fte ? fte.value : 'story';
+        data = {mode:'framework', title:t, frameType:ft, stage:'outline', blocks:{}, guidingAnswers:{}, essay:'', content:'', notes:'', outlineProgress:{si:0,sbi:0}, draftProgress:{si:0}, contentProgress:{si:0}};
+        entry.stage = 'outline';
+      } else {
+        data = {mode:'freeform', title:t, content:''};
+      }
+      st.docs = [entry].concat(st.docs); svDocs(st.docs); svDoc(id, data);
+      st.aid = id; st.ad = data; st.v = 'editor';
+      var m = document.getElementById('modal'); if (m) m.remove();
+      render();
+    },
+
+    // Editor
+    goHome: function() { st.v = 'home'; st.aid = null; st.ad = null; render(); },
+    onEdit: function(v) { if (!st.ad) return; st.ad.content = v; save(); var e = document.getElementById('ed-wc'); if (e) e.textContent = cw(v) + ' words'; },
+    onNotes: function(v) { if (!st.ad) return; st.ad.notes = v; save(); },
+    setStage: function(s) { if (!st.ad) return; st.ad.stage = s; save(); render(); },
+
+    // Write-or-Else (standalone)
+    launchWoe: function() { st.wt='';st.ww=false;st.wi=0;st.wc=false;st.wPicked=false;st.wMins=0;st.wCountdown=0;st.wDone=false; showWoe(); },
+    wPick: function(m) { st.wMins = m; st.wCountdown = m * 60; st.wPicked = true; showWoe(); },
+    wDone: function() { clearW(); if(st.wt.trim()&&st.ad){var ex=(st.ad.content||'').trim();st.ad.content=ex?ex+'\n\n'+st.wt.trim():st.wt.trim();save();} st.ww=false; var ov=document.getElementById('woe');if(ov)ov.remove(); render(); },
+    wCancel: function() { clearW(); st.ww=false; var ov=document.getElementById('woe');if(ov)ov.remove(); },
+
+    // LinePuncher
+    launchLp: function() { if(!st.ad)return;var t=st.ad.content||'',pp=t.split(/\n\s*\n/).filter(function(p){return p.trim()});st.pb=pp.map(function(p,i){return{id:i+1,text:p.trim()}});st.pei=null;st.v='lp';render(); },
+    lpAdd: function() { var el=document.getElementById('lp-in'),t=el?el.value:'';if(!t.trim())return;var pp=t.split(/\n\s*\n/).filter(function(p){return p.trim()}),mx=st.pb.reduce(function(m,b){return Math.max(m,b.id)},0);pp.forEach(function(p){st.pb.push({id:++mx,text:p.trim()})});render(); },
+    lpEdit: function(id) { var b=st.pb.find(function(x){return x.id===id});if(b){st.pei=id;st.ped=b.text;render();} },
+    lpSave: function(id) { st.pb=st.pb.map(function(b){return b.id===id?{id:b.id,text:st.ped.trim()}:b});st.pei=null;render(); },
+    lpCancelEdit: function() { st.pei=null;render(); },
+    lpDel: function(id) { st.pb=st.pb.filter(function(b){return b.id!==id});render(); },
+    lpMov: function(id,dir) { var idx=st.pb.findIndex(function(b){return b.id===id}),n=idx+dir;if(n<0||n>=st.pb.length)return;var t=st.pb[idx];st.pb[idx]=st.pb[n];st.pb[n]=t;render(); },
+    lpBack: function() { if(!st.ad)return;st.ad.content=st.pb.map(function(b){return b.text}).join('\n\n');save();st.v='editor';render(); },
+    exitLp: function() { st.v='editor';render(); },
+
+    // Framework
+    launchFw: function() {
+      var d = st.ad;
+      if (!d || d.mode !== 'framework') return;
+      switch (d.stage) {
+        case 'outline': st.fsi=d.outlineProgress?d.outlineProgress.si:0; st.fsbi=d.outlineProgress?d.outlineProgress.sbi:0; st.fv='outline'; break;
+        case 'draft': st.fsi=d.draftProgress?d.draftProgress.si:0; st.fv='dr'; break;
+        case 'content-editor': st.ga=d.guidingAnswers||{}; st.fv='cg'; break;
+        case 'line-editor': st.fv='le'; launchFLE(); return;
+        case 'publish': st.v='editor'; render(); return;
+      }
+      st.v = 'fw'; render();
+    },
+    fwBack: function() { clearF(); st.v='editor'; render(); },
+    fwSubO: function() {
+      var ta=document.getElementById('fw-in'),v=ta?ta.value.trim():'';if(!v)return;
+      var d=st.ad,subs=gSubs(d.frameType),sec=SECS[st.fsi],sub=subs[st.fsbi];
+      d.blocks[sec.id+':'+sub]=v;
+      var ns=st.fsi,nb=st.fsbi+1;if(nb>=subs.length){ns++;nb=0;}
+      d.outlineProgress={si:ns,sbi:nb};
+      if(ns>=SECS.length){d.stage='draft';d.draftProgress={si:0};d.content='';save();st.fsi=0;st.fv='dr';}
+      else{save();st.fsi=ns;st.fsbi=nb;}
+      render();
+    },
+    fwStartDraft: function() { st.dt='';st.dw=false;st.di=0;st.dc=false;st.dPicked=false;st.dMins=0;st.dCountdown=0;st.dDone=false;st.fv='draft';render(); },
+    fwPickTime: function(m) { st.dMins=m;st.dCountdown=m*60;st.dPicked=true;render(); },
+    fwFinDraft: function() { st.dw=false;clearF();render(); },
+    fwSubDraft: function() {
+      var d=st.ad,sec=SECS[st.fsi];d.blocks['draft:'+sec.id]=st.dt;
+      var ni=st.fsi+1;
+      if(ni>=SECS.length){d.stage='content-editor';d.draftProgress={si:0};save();clearF();st.ga=d.guidingAnswers||{};st.fv='cg';}
+      else{d.draftProgress={si:ni};save();clearF();st.fsi=ni;st.fv='dr';st.dt='';st.dw=false;st.di=0;st.dc=false;st.dPicked=false;st.dDone=false;}
+      render();
+    },
+    fwSubGuiding: function() {
+      var ans={};document.querySelectorAll('.fgta').forEach(function(ta){ans[ta.dataset.q]=ta.value.trim();});
+      st.ad.guidingAnswers=ans;st.ad.contentProgress={si:0};save();
+      launchCE(0);
+    },
+    fwAddEB: function() { st.eb.push({id:Date.now(),text:''});render(); },
+    fwDelEB: function(i) { st.eb.splice(i,1);render(); },
+    fwSubCE: function() {
+      document.querySelectorAll('.feb').forEach(function(el){var i=parseInt(el.dataset.idx);if(!isNaN(i)&&st.eb[i])st.eb[i].text=el.textContent;});
+      var d=st.ad,sec=SECS[st.fsi];d.blocks['draft:'+sec.id]=st.eb.map(function(b){return b.text}).join(' ');
+      var ni=st.fsi+1;
+      if(ni>=SECS.length){d.stage='line-editor';save();launchFLE();}
+      else{d.contentProgress={si:ni};save();launchCE(ni);}
+    },
+    fwLM: function(i,d) { var n=i+d;if(n<0||n>=st.ls.length)return;var t=st.ls[i];st.ls[i]=st.ls[n];st.ls[n]=t;render(); },
+    fwLD: function(i) { st.ls.splice(i,1);render(); },
+    fwSubLE: function() {
+      document.querySelectorAll('.flb').forEach(function(el){var i=parseInt(el.dataset.idx);if(!isNaN(i)&&st.ls[i])st.ls[i].text=el.textContent;});
+      var d=st.ad,essay=st.ls.map(function(s){return s.text}).join(' ');
+      d.essay=essay;d.content=essay;d.stage='publish';save();st.v='editor';render();
+    }
+  };
+
+  function launchCE(si) {
+    var d=st.ad,sec=SECS[si],dr=d.blocks['draft:'+sec.id]||'';
+    st.eb=splitS(dr).map(function(t,i){return{id:i+1,text:t}});
+    st.fsi=si;st.fv='ce';st.v='fw';render();
+  }
+
+  function launchFLE() {
+    var d=st.ad,ft='';
+    AORD.forEach(function(sid){var dr=d.blocks['draft:'+sid]||'';if(dr)ft+=dr+'\n\n';});
+    st.ls=splitS(ft.trim()).map(function(t,i){return{id:i+1,text:t}});
+    st.fv='le';st.v='fw';render();
+  }
+
+  // Boot
+  render();
+})();
+</script>
+</body>
+</html>
